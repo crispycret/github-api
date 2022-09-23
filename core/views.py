@@ -6,7 +6,7 @@ from github import Github
 from config import Configuration
 
 from core import app
-from core.common import get_last_modified_repo
+from core.common import get_repo_with_lastest_commit
 
 @app.route('/', methods=['GET'])
 def test():
@@ -24,8 +24,12 @@ def last_modified_repo ():
     user = g.get_user()
     repos = user.get_repos()
 
-    newest_repo = get_last_modified_repo(repos)
+
+    newest_repo = get_repo_with_lastest_commit(repos)
     commits = newest_repo.get_commits()
+
+    newest_repo.default_branch
+    newest_repo.html_url
 
     # print ('\n\n')
     print (newest_repo.name)
