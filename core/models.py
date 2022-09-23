@@ -1,9 +1,25 @@
 
 from core import db
+from flask_sqlalchemy import Model
+
+class User(db.Model):
+    id = db.PrimaryKey(auto_increment=True)
+    name = db.String(128)
+    email = db.String(128)
+
+    @staticmethod
+    def create_from_api(user):
+        u = User()
+        repos = Repo.create_multi_from_api(u.get_repos())
+        return u
+
 
 class Repo (db.Model):
-
-    pass
+    id = db.PrimaryKey(auto_increment=True)
+    user_id = db.Reference(User.id)
+    name = db.String(128)
+    created_at = db.String(128)
+    last_modified = db.String(128)
 
     @property
     def serialize(self):
@@ -28,10 +44,18 @@ class Repo (db.Model):
         return r
 
 
+    @staticmethod
+    def create_multi_from_api(repos):
+        return [Repo.create_from_api(r) for r in repos]
+        
 
 
 
 class Commit (db.Model):
+    id = db.PrimaryKey(auto_increment=True)
+    repo_id = db.Reference(User.id)
+    created_at = db.String(128)
+    last_modified = db.String(128)
     pass
 
     @property

@@ -2,6 +2,7 @@ from github import Github
 from core.utils import to_datetime
 
 
+
 def get_repo_with_lastest_commit(repos):
     newest_repo = None
     newest_commit = None
