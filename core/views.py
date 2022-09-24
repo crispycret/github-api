@@ -2,6 +2,7 @@
 
 import json
 from github import Github
+from flask import jsonify
 
 from config import Configuration
 
@@ -25,25 +26,11 @@ def update ():
 
     
 
-@app.route('/last_modified_repo', methods=['GET'])
-def last_modified_repo ():
-    print('last_modified_repo')
+@app.route('/repo_last_modified', methods=['GET'])
+def repo_last_modified ():
+    print('repo_last_modified')
     
     g = Github(Configuration.GITHUB_ACCESS_TOKEN)
 
-    user = g.get_user()
-    repos = user.get_repos()
-
-
-    newest_repo = get_repo_with_lastest_commit(repos)
-    commits = newest_repo.get_commits()
-
-    newest_repo.default_branch
-    newest_repo.html_url
-
-    # print ('\n\n')
-    print (newest_repo.name)
-    print (newest_repo.created_at)
-    print (commits[0].last_modified)
-    results = json.dumps(newest_repo)
-    return results
+    user = User.create_from_api(g.get_user(), True, True)
+    return jsonify(user.serialize)

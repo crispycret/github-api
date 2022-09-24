@@ -3,8 +3,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-base_dir = os.path.abspath(os.path.dirname(__file__)) 
+basedir = os.path.abspath(os.path.dirname(__file__)) 
 
 
 class Configuration (object):
     GITHUB_ACCESS_TOKEN = os.environ.get("GITHUB_ACCESS_TOKEN")
+
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or \
+        'sqlite:///' + os.path.join(basedir, 'default.db')
+
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
