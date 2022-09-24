@@ -31,6 +31,10 @@ def repo_last_modified ():
     print('repo_last_modified')
     
     g = Github(Configuration.GITHUB_ACCESS_TOKEN)
+    user = {}
+    user['name'] = g.get_user().name
 
-    user = User.create_from_api(g.get_user(), True, True)
-    return jsonify(user.serialize)
+    # user = User.create_from_api(g.get_user())
+    # return jsonify(user.serialize)
+
+    return jsonify(user)

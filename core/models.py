@@ -18,16 +18,16 @@ class User(db.Model):
         return results
 
     @staticmethod
-    def create_from_api(user, save=False, commit=False):
+    def create_from_api(user):
         u = User(name=user.name, email=user.email)
 
-        if (save):
-            db.session.add(u)
-            print('\n\n\n')
-            print(u.serialize)
-            print('\n\n\n')
-            Repo.create_multi_from_api(u.id, user.get_repos(), save, False)
-            if (commit): db.session.commit()
+        print(u.serialize)
+        # db.session.add(u)
+        # db.session.commit()
+
+        # Repo.create_multi_from_api(u.id, user.get_repos())
+
+        # print (u.serialize)
         return u
 
 
@@ -56,27 +56,22 @@ class Repo (db.Model):
 
 
     @staticmethod
-    def create_from_api(user_id, repo, save=False, commit=False):
+    def create_from_api(user_id, repo):
         r = Repo(
             user_id=user_id,
             name=repo.name, html_url=repo.html_url,
             created_at=repo.created_at, last_modified=repo.last_modified
         )
-        if (save):
-            db.session.add(r)
-            print('\n\n\n')
-            print(r.serialize)
-            print('\n\n\n')
-            Commit.create_multi_from_api(r.id, repo.get_commits(), save, False)
-            if (commit): db.session.commit()
+        db.session.add(r)
+        Commit.create_multi_from_api(r.id, repo.get_commits())
+        
+        print (r.serialize)
         return r
 
 
     @staticmethod
-    def create_multi_from_api(user_id, repos, save=False, commit=False):
-        results = [Repo.create_from_api(user_id, r, save, False) for r in repos]
-        if (save and commit): db.session.commit()
-        return results
+    def create_multi_from_api(user_id, repos):
+        return [Repo.create_from_api(user_id, r) for r in repos]
         
 
     @staticmethod
@@ -104,26 +99,19 @@ class Commit (db.Model):
         return results
 
     @staticmethod
-    def create_from_api(repo_id, repo_commit, save=False, commit=False):
+    def create_from_api(repo_id, commit):
         c = Commit(
             repo_id=repo_id,
-            created_at=repo_commit.commit.committer.date,
+            created_at=commit.commit.committer.date,
         )
-        if (save):
-            db.session.add(c)
-            print('\n\n\n')
-            print(c.serialize)
-            print('\n\n\n')
-
-            if (commit): db.session.commit()
+        db.session.add(c)
+        # print (c.serialize)
         return c
 
     
     @staticmethod
-    def create_multi_from_api(repo_id, commits, save=False, commit=False):
-        results = [Commit.create_from_api(repo_id, c, save, False) for c in commits]
-        if (save and commit): db.session.commit()
-        return results
+    def create_multi_from_api(repo_id, commits):
+        return [Commit.create_from_api(repo_id, c) for c in commits]
 
 
     @staticmethod
