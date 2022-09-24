@@ -2,6 +2,8 @@
 from core import db
 from flask_sqlalchemy import Model
 
+from core.views import last_modified_repo
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
@@ -26,6 +28,7 @@ class User(db.Model):
             Repo.create_multi_from_api(user.get_repos(), save, False)
             if (commit): db.commit()
         return u
+
 
 
 class Repo (db.Model):
@@ -71,6 +74,11 @@ class Repo (db.Model):
         return results
         
 
+    @staticmethod
+    def get_by_last_commit():
+        repos = Repo.query.all()
+
+
 
 
 class Commit (db.Model):
@@ -89,25 +97,30 @@ class Commit (db.Model):
         return results
 
     @staticmethod
-    def create_from_api(commit):
-        c = Commit()
-        c.created_at = commit.created_at
-        c.last_modified = commit.last_modified
+    def create_from_api(repo_commit, save=False, commit=False):
+        c = Commit(
+            created_at=repo_commit.created_at,
+            last_modified=repo_commit.last_modified
+        )
+        if (save):
+            c.save()
+            if (commit): db.commit()
         return c
 
     
     @staticmethod
-    def create_multi_from_api(commits):
-        results = []
-        for commit in commits:
-            new = Commit.create_from_api(commit)
-            c.append(new)
+    def create_multi_from_api(commits, save=False, commit=False):
+        results = [Commit.create_from_api(c, save, False) for c in commits]
+        if (save and commit): db.commit()
         return results
 
 
     @staticmethod
     def serialize_many(commits):
-        results = []
-        for commit in commits:
-            results.append(commit.serialize)
-        return results
+        return [commit.serialize for commit in commits]
+
+
+    @staticmethod
+    def get_last_commit():
+        return Commit.query.all().order_by(Commit.last_modified).first()
+            
