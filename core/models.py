@@ -2,7 +2,12 @@
 from core import db
 from flask_sqlalchemy import Model
 
+
+
 class User(db.Model):
+    '''
+    
+    '''
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
@@ -32,7 +37,12 @@ class User(db.Model):
 
 
 
+
+
 class Repo (db.Model):
+    '''
+    
+    '''
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
@@ -84,7 +94,12 @@ class Repo (db.Model):
 
 
 
+
+
 class Commit (db.Model):
+    '''
+    
+    '''
     repo_id = db.Column(db.Integer, db.ForeignKey('repo.id'), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     created_at =  db.Column(db.String(128), unique=True, nullable=False)
@@ -122,4 +137,11 @@ class Commit (db.Model):
     @staticmethod
     def get_last_commit():
         return Commit.query.all().order_by(Commit.last_modified).first()
+            
+
+
+
+
+
+
             
