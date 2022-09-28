@@ -1,6 +1,7 @@
 
 
 import json
+import requests
 from github import Github
 from flask import jsonify
 
@@ -48,6 +49,22 @@ def update ():
 @app.route('/repo/last/modified', methods=['GET'])
 def repo_last_modified():
     '''
+    Retrieve from the database the last modified repo.
+    Before returning the results make a request 
+    to update the database from the Github API (Async request).
+    '''
+    repo = Repo.get_by_last_commit()
+
+    # Make a request to the API from within the API to update the database
+    # Make this async or figure out how to do this in a new thread (flask or subprocess.)
+    requests.request('GET', '127.0.0.1/repo/update/all')
+
+    return jsonify(repo.serialize)
+
+
+@app.route('/repo/update/all', methods=['GET'])
+def update_all():
+    '''
     
     '''
     client = connect()
@@ -57,5 +74,3 @@ def repo_last_modified():
     print(user.name)
     user = User.create_from_api(client.get_user())
     return jsonify(user.serialize)
-
-
