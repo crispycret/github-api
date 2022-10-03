@@ -7,15 +7,18 @@ class Repo (db.Model):
     '''
     
     '''
-    name = db.Column(db.String(128), unique=True, nullable=False, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(128), unique=True, nullable=False)
     html_url = db.Column(db.String(128), unique=True, nullable=False)
     created_at = db.Column(db.String(128), unique=False, nullable=False)
     last_modified = db.Column(db.String(128), unique=False, nullable=True)
-    # commits = db.relationship('Commit', backref='repo', lazy=True)
+
+    commits = db.relationship('Commit', backref='repo', lazy=True)
 
     @property
     def serialize(self):
         results = {}
+        results['id'] = self.id
         results['name'] = self.name
         results['html_url'] = self.html_url
         results['created_at'] = self.created_at
@@ -27,17 +30,29 @@ class Repo (db.Model):
 
     @staticmethod
     def create_from_api(repo):
+        """ 
+        Create the repo object. 
+        If the repo already exists in the database, 
+        retrieve the repo from the database to get the id. 
+        Otherwise, save the repo to the databse. 
+        Create all the repo's commits and save them to the database.
+        """
         r = Repo(
             name=repo.name, html_url=repo.html_url,
             created_at=repo.created_at, last_modified=repo.last_modified
         )
-        if (bool(Repo.query.filter_by(name = r.name).first())):
-            print ("Repo {name} already exists.")
+
+        results = Repo.query.filter_by(name = r.name).first()
+
+        if (bool(results)):
+            r = results
         else:
             db.session.add(r)
             db.session.commit()
 
-        # Commit.create_multi_from_api(r.name, repo.get_commits())        
+        print (f"Repo: {r.id}:")
+
+        Commit.create_multi_from_api(r.id, repo.get_commits())        
         return r
 
 
@@ -52,7 +67,7 @@ class Repo (db.Model):
         commits = Commit.get_last_commit(count)
         if (commits == []): return []
 
-        repos = [Repo.query.filter_by(name=commit.repo_name) 
+        repos = [Repo.query.filter_by(name=commit.repo_id) 
                     for commit in commits]
         return repos
 
@@ -65,33 +80,43 @@ class Commit (db.Model):
     '''
     
     '''
-    repo_name = db.Column(db.String(2128), db.ForeignKey('repo.name'), nullable=False)
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at =  db.Column(db.String(128), unique=False, nullable=False)
     last_modified =  db.Column(db.String(128), unique=False, nullable=True)
+
+    repo_id = db.Column(db.Integer, db.ForeignKey('repo.id'), nullable=False)
 
     @property
     def serialize(self):
         results={}
-        results['repo_name'] = self.repo_name
         results['id'] = self.id
+        results['repo_id'] = self.repo_id
         results['created_at'] = self.created_at
         return results
 
     @staticmethod
-    def create_from_api(repo_name, commit):
+    def create_from_api(repo_id, commit):
         c = Commit(
-            repo_name=repo_name,
+            repo_id=repo_id,
             created_at=commit.commit.committer.date,
         )
-        db.session.add(c)
-        db.session.commit()
+
+        results = Commit.query.filter_by(repo_id=repo_id, created_at=c.created_at).first()
+
+        if (bool(results)):
+            c = results
+        else:
+            db.session.add(c)
+            db.session.commit()
+
+        print (f"Repo: {repo_id}, Commit: {c.id}")
+        
         return c
 
     
     @staticmethod
-    def create_multi_from_api(repo_name, commits):
-        return [Commit.create_from_api(repo_name, c) for c in commits]
+    def create_multi_from_api(repo_id, commits):
+        return [Commit.create_from_api(repo_id, c) for c in commits]
 
 
     @staticmethod

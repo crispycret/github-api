@@ -48,6 +48,13 @@ def update ():
 
 
 
+@app.route('/repo/<name>')
+def get_repo(name):
+    r = Repo.query.filter_by(name=name).first()
+    if r == None: return r
+    return r.serialize
+
+
 
 @app.route('/repo/last/modified', methods=['GET'])
 def repo_last_modified():
