@@ -8,14 +8,15 @@ from config import Configuration
 
 
 if (__name__ != '__main__'):
-    print ("Program Running")
+    # print ("Program Running")
 
-    g = Github(Configuration.GITHUB_ACCESS_TOKEN)
+    # g = Github(Configuration.GITHUB_ACCESS_TOKEN)
 
-    for repo in g.get_user().get_repos():
-        print(repo.name)
-        # print(dir(repo))
-        break
+    # for repo in g.get_user().get_repos():
+    #     print(repo.name)
+    #     # print(dir(repo))
+    #     break
+    pass
 
 
 if __name__ == '__main__':
