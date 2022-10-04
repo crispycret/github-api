@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 17acf68cc406
+Revision ID: e6e3eb7e433c
 Revises: 
-Create Date: 2022-10-02 19:46:52.009910
+Create Date: 2022-10-03 23:43:11.228802
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '17acf68cc406'
+revision = 'e6e3eb7e433c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade():
     op.create_table('repo',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=128), nullable=False),
+    sa.Column('author', sa.String(length=128), nullable=False),
     sa.Column('html_url', sa.String(length=128), nullable=False),
     sa.Column('created_at', sa.String(length=128), nullable=False),
     sa.Column('last_modified', sa.String(length=128), nullable=True),
@@ -30,6 +31,8 @@ def upgrade():
     )
     op.create_table('commit',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('author', sa.String(length=128), nullable=False),
+    sa.Column('message', sa.String(length=128), nullable=False),
     sa.Column('created_at', sa.String(length=128), nullable=False),
     sa.Column('last_modified', sa.String(length=128), nullable=True),
     sa.Column('repo_id', sa.Integer(), nullable=False),

@@ -43,7 +43,9 @@ def update ():
         in a relation database for faster queries.
     '''
     client = connect()
-    repos = Repo.create_multi_from_api(client.get_user().get_repos())
+    repos = client.get_user().get_repos()
+
+    repos = Repo.create_multi_from_api(repos)
     return [repo.serialize for repo in repos]
 
 
@@ -63,19 +65,9 @@ def repo_last_modified():
     Before returning the results make a request 
     to update the database from the Github API (Async request).
     '''
-    count = request.args.get('count', default=1, type=int)
-    print (count)
-    print (request)
-    print (request.args)
-    repos = Repo.get_by_last_commit(count)
-
-    # # Make a request to the API from within the API to update the database
-    # # Make this async or figure out how to do this in a new thread (flask or subprocess.)
-    # requests.request('GET', '127.0.0.1/repo/update/all')
-
-    if (len(repos) == 1):
-        return repos[0].serialize
-    return jsonify([repo.serialize for repo in repos])
+    limit = request.args.get('limit', default=1, type=int)
+    repos = Repo.get_by_last_commit(limit)
+    return [r.serialize for r in repos]
 
 
 
