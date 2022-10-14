@@ -30,10 +30,10 @@ def test():
 
 
 @app.route('/test/client/token')
-def test_client():
-    print('\n\n\n')
-    print(Configuration.GITHUB_ACCESS_TOKEN)
-    print('\n\n\n')
+def test_client_token():
+    # print('\n\n\n')
+    # print(Configuration.GITHUB_ACCESS_TOKEN)
+    # print('\n\n\n')
     return {'token': Configuration.GITHUB_ACCESS_TOKEN}
 
 @app.route('/test/client')
