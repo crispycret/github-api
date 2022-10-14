@@ -16,9 +16,6 @@ from core.models import Repo, Commit
 # CLIENT = Github(Configuration.GITHUB_ACCESS_TOKEN)
 
 def connect():
-    '''
-    
-    '''
     return Github(Configuration.GITHUB_ACCESS_TOKEN)
 
 
@@ -28,21 +25,6 @@ def test():
     print('test')
     return {'status': 200}
 
-
-@app.route('/test/client/token')
-def test_client_token():
-    # print('\n\n\n')
-    # print(Configuration.GITHUB_ACCESS_TOKEN)
-    # print('\n\n\n')
-    return {'token': Configuration.GITHUB_ACCESS_TOKEN}
-
-@app.route('/test/client')
-def test_client():
-    print('\n\n\n')
-    print(Configuration.GITHUB_ACCESS_TOKEN)
-    print('\n\n\n')
-    client = connect()
-    return {'status': True}
 
 
 @app.route('/update')
