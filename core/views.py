@@ -29,6 +29,20 @@ def test():
     return {'status': 200}
 
 
+@app.route('/test/client/token')
+def test_client():
+    print('\n\n\n')
+    print(Configuration.GITHUB_ACCESS_TOKEN)
+    print('\n\n\n')
+    return {'token': Configuration.GITHUB_ACCESS_TOKEN}
+
+@app.route('/test/client')
+def test_client():
+    print('\n\n\n')
+    print(Configuration.GITHUB_ACCESS_TOKEN)
+    print('\n\n\n')
+    client = connect()
+    return {'status': True}
 
 
 @app.route('/update')
