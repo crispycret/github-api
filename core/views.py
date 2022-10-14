@@ -23,7 +23,7 @@ def connect():
 
 
 
-@app.route('/', methods=['GET'])
+@app.route('/test', methods=['GET'])
 def test():
     print('test')
     return {'status': 200}
