@@ -52,8 +52,9 @@ def update ():
 
 @app.route('/repo/<name>')
 def get_repo(name):
+    print(name)
     r = Repo.query.filter_by(name=name).first()
-    if r == None: return r
+    if r == None: return {}
     return r.serialize
 
 
