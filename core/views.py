@@ -18,7 +18,7 @@ def connect():
 
 
 @app.route('/test', methods=['GET'])
-def test(): return {'status': 200, 'body': Configuration.SQLALCHEMY_DATABASE_URI}
+def test(): return {'status': 200, 'msg': '', 'body': Configuration.SQLALCHEMY_DATABASE_URI}
 
 
 
