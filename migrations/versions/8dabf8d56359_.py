@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 36844f07f345
+Revision ID: 8dabf8d56359
 Revises: 
-Create Date: 2022-11-09 16:12:38.111049
+Create Date: 2022-11-09 19:01:01.657678
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '36844f07f345'
+revision = '8dabf8d56359'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('name', sa.String(length=128), nullable=False),
     sa.Column('author', sa.String(length=128), nullable=False),
     sa.Column('html_url', sa.String(length=128), nullable=False),
-    sa.Column('created_at', sa.String(length=128), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_repo')),
     sa.UniqueConstraint('html_url', name=op.f('uq_repo_html_url')),
     sa.UniqueConstraint('name', name=op.f('uq_repo_name'))
@@ -32,7 +32,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('author', sa.String(length=128), nullable=False),
     sa.Column('message', sa.Text(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('repo_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['repo_id'], ['repo.id'], name=op.f('fk_commit_repo_id_repo')),
     sa.PrimaryKeyConstraint('id', name=op.f('pk_commit'))
